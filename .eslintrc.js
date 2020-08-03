@@ -1,0 +1,41 @@
+module.exports = {
+  env: {
+    browser: true,
+    es6: true,
+    node: true,
+    jest: true,
+  },
+  extends: ['eslint:recommended', 'plugin:react/recommended'],
+  globals: {
+    Atomics: 'readonly',
+    SharedArrayBuffer: 'readonly',
+    ErrorUtils: true,
+    __DEV__: true,
+  },
+  parser: 'babel-eslint',
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 2018,
+    sourceType: 'module',
+  },
+  plugins: ['react', 'react-native', 'jest'],
+  rules: {
+    'no-console': 0,
+    'react/jsx-uses-vars': 2,
+    'no-unused-vars': ['warn', { args: 'none' }],
+    'react/prop-types': 0,
+    'react/display-name': 0,
+    'react/no-string-refs': 0,
+    'react/no-deprecated': 0,
+    semi: ['warn', 'always'],
+    'react-native/no-unused-styles': 2,
+    'react-native/split-platform-components': 0,
+    'react-native/no-inline-styles': 0,
+    'react-native/no-color-literals': 0,
+    'react-native/no-raw-text': 2,
+    'no-extra-boolean-cast': 0,
+    'no-prototype-builtins': 0,
+  },
+};
