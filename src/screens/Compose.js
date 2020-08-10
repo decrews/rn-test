@@ -1,5 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable, SafeAreaView, StyleSheet, TextInput, Platform, Alert } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  View,
+  Text,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  TextInput,
+  Platform,
+  Alert,
+  StatusBar,
+  Keyboard,
+} from 'react-native';
 import RNDraftView from 'react-native-draftjs-editor';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { useDispatch, useSelector } from 'react-redux';
@@ -56,6 +67,10 @@ const Input = React.forwardRef((props, ref) => {
   );
 });
 
+function onKeyboardShow() {
+  StatusBar.setBarStyle('dark-content');
+}
+
 export default function ComposeScreen({ navigation }) {
   const dispatch = useDispatch();
   const _draftRef = React.createRef();
@@ -71,9 +86,9 @@ export default function ComposeScreen({ navigation }) {
   const [toValue, setToValue] = useState(recipient ? recipient : '');
   const [subjectValue, setSubjectValue] = useState(subject ? subject : '');
 
-  const editorLoaded = () => {
-    _draftRef.current && _draftRef.current.focus();
-  };
+  // const editorLoaded = () => {
+  //   _draftRef.current && _draftRef.current.focus();
+  // };
 
   const toggleStyle = (style) => {
     _draftRef.current && _draftRef.current.setStyle(style);
@@ -130,6 +145,17 @@ export default function ComposeScreen({ navigation }) {
   }
 
   useEffect(() => {
+    // Workaround for https://github.com/react-native-community/react-native-webview/issues/735#issuecomment-548059083
+    Keyboard.addListener('keyboardWillShow', onKeyboardShow);
+    StatusBar.setBarStyle('dark-content');
+
+    return function cleanUp() {
+      Keyboard.removeListener('keyboardWillShow', onKeyboardShow);
+      StatusBar.setBarStyle('dark-content');
+    };
+  }, []);
+
+  useEffect(() => {
     /**
      * Get the current editor state in HTML.
      * Usually keep it in the submit or next action to get output after user has typed.
@@ -144,12 +170,11 @@ export default function ComposeScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.containerStyle}>
       <Header onPress={exit} buttonText={'<'} />
-      <Input label={'To'} value={toValue} onChangeText={(text) => setToValue(text)} />
+      <Input label={'To'} value={toValue} onChangeText={(text) => setToValue(text)} autoFocus />
       <Input label={'Subject'} value={subjectValue} onChangeText={(text) => setSubjectValue(text)} />
       <View style={{ flex: 1, padding: 15 }}>
         <RNDraftView
           defaultValue={body ? body : ''}
-          onEditorReady={editorLoaded}
           style={{ flex: 1 }}
           ref={_draftRef}
           onStyleChanged={setActiveStyles}

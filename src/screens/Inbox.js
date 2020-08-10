@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, SafeAreaView, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, SafeAreaView, FlatList, TouchableOpacity, ActivityIndicator, StatusBar } from 'react-native';
 import Header from '../components/Header';
 import { useDispatch, useSelector } from 'react-redux';
 import colors from '../styles/colors';
@@ -79,6 +79,7 @@ function ComposeButton({ style, onPress }) {
   const styles = getStyles();
   return (
     <View style={[style, styles.composeContainer]}>
+      <StatusBar barStyle={'dark-content'} />
       <TouchableOpacity onPress={onPress}>
         <View style={styles.composeButton}>
           <SvgIcon icon={'compose'} size={30} color={colors.white} />
