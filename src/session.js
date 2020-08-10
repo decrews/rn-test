@@ -8,3 +8,5 @@ export function startEventListeners() {
 }
 
 startEventListeners();
+
+console.disableYellowBox = true;

@@ -16,6 +16,10 @@ export const colors = {
   androidTextPlaceholder: '#a0a0a0',
   lightSpacer: '#E8EBED',
   lightLineColor: '#C7C6CB',
+  darkestGrey: '#585858',
+  darkerGrey: '#a9a9a9',
+  darkGrey: '#adadad',
+  lightGrey: '#e0e0e0',
 };
 
 export default colors;

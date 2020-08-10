@@ -37,5 +37,6 @@ module.exports = {
     'react-native/no-raw-text': 2,
     'no-extra-boolean-cast': 0,
     'no-prototype-builtins': 0,
+    'no-case-declarations': 0,
   },
 };

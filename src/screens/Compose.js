@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable, SafeAreaView, StyleSheet, TextInput, Platform } from 'react-native';
+import { View, Text, Pressable, SafeAreaView, StyleSheet, TextInput, Platform, Alert } from 'react-native';
 import RNDraftView from 'react-native-draftjs-editor';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import Header from '../components/Header';
 
 const ControlButton = ({ text, action, isActive }) => {
   return (
@@ -55,16 +56,20 @@ const Input = React.forwardRef((props, ref) => {
   );
 });
 
-export default function ComposeScreen() {
+export default function ComposeScreen({ navigation }) {
   const dispatch = useDispatch();
-
   const _draftRef = React.createRef();
 
   const [activeStyles, setActiveStyles] = useState([]);
   const [blockType, setActiveBlockType] = useState('unstyled');
-  const [editorState, setEditorState] = useState('');
-  const [toValue, setToValue] = useState('');
-  const [subjectValue, setSubjectValue] = useState('');
+
+  const recipient = navigation?.state?.params?.recipient;
+  const subject = navigation?.state?.params?.subject;
+  const body = navigation?.state?.params?.body;
+
+  const [editorState, setEditorState] = useState(body ? body : '');
+  const [toValue, setToValue] = useState(recipient ? recipient : '');
+  const [subjectValue, setSubjectValue] = useState(subject ? subject : '');
 
   const editorLoaded = () => {
     _draftRef.current && _draftRef.current.focus();
@@ -79,14 +84,49 @@ export default function ComposeScreen() {
   };
 
   function saveDraft() {
+    // check for current id:
+    const id = navigation?.state?.params?.id;
+
     const draft = {
       recipient: toValue,
       subject: subjectValue,
       body: editorState,
+      id: id ? id : Date.now(),
     };
 
-    console.log(draft);
-    // dispatch({ type: 'save-draft', payload: draft });
+    dispatch({ type: 'save-draft', payload: draft });
+  }
+
+  function exit() {
+    function yes() {
+      saveDraft();
+      navigation.goBack();
+    }
+
+    function no() {
+      navigation.goBack();
+    }
+
+    Alert.alert(
+      'Save draft?',
+      'Did you want to save this draft?',
+      [
+        {
+          text: 'No',
+          onPress: no,
+          style: 'destructive',
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: yes,
+        },
+      ],
+      { cancelable: true },
+    );
   }
 
   useEffect(() => {
@@ -98,15 +138,17 @@ export default function ComposeScreen() {
   }, [_draftRef]);
 
   useEffect(() => {
-    saveDraft();
+    // saveDraft();
   }, [editorState, toValue, subjectValue]);
 
   return (
     <SafeAreaView style={styles.containerStyle}>
+      <Header onPress={exit} buttonText={'<'} />
       <Input label={'To'} value={toValue} onChangeText={(text) => setToValue(text)} />
       <Input label={'Subject'} value={subjectValue} onChangeText={(text) => setSubjectValue(text)} />
       <View style={{ flex: 1, padding: 15 }}>
         <RNDraftView
+          defaultValue={body ? body : ''}
           onEditorReady={editorLoaded}
           style={{ flex: 1 }}
           ref={_draftRef}

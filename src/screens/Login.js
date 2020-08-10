@@ -2,6 +2,7 @@ import React from 'react';
 import { SafeAreaView, Text, Pressable, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
+import Header from '../components/Header';
 
 const LoginScreen = ({ navigation }) => {
   const styles = getStyles();
@@ -11,12 +12,11 @@ const LoginScreen = ({ navigation }) => {
 
   const dispatch = useDispatch();
 
-  console.log(user);
-  // console.log(screen);
   const username = `Current User: ${user.name}`;
 
   return (
     <SafeAreaView style={styles.contianer}>
+      <Header />
       <ScrollView style={{ height: '100%', width: '100%' }} contentContainerStyle={{ alignItems: 'center' }}>
         <Text style={styles.text}>{`Screen: Login`}</Text>
         {user && user.name && <Text style={[styles.text, { paddingTop: 20 }]}>{username}</Text>}
