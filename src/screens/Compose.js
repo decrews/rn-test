@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import RNDraftView from 'react-native-draftjs-editor';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Header from '../components/Header';
 
 const ControlButton = ({ text, action, isActive }) => {
@@ -165,6 +165,14 @@ export default function ComposeScreen({ navigation }) {
 
   useEffect(() => {
     // saveDraft();
+    console.log(' ');
+    console.log('to:');
+    console.log(toValue);
+    console.log('subject:');
+    console.log(subjectValue);
+    console.log('editorState');
+    console.log(editorState);
+    console.log(' ');
   }, [editorState, toValue, subjectValue]);
 
   return (
